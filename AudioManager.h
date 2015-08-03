@@ -8,12 +8,24 @@
 
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
+#import "NSTimer+Block.h"
+
+typedef NS_ENUM(int, AudioPlayerPlayState) {
+    AudioPlayerIsPlaying = 1,
+    AudioPlayerIsStop = 0,
+    AudioPlayerIsPause = 2,
+    AudioPlayerIsGoOn = 3,
+};
+
+
 @protocol AududioDelegate;
 @interface AudioManager : NSObject
 
 @property (nonatomic ,retain)AVPlayer * player;
 
 @property (nonatomic ,assign)BOOL beginToPlay;
+@property (nonatomic ,assign)int AudioPlayerPlayState;
+
 @property (nonatomic ,assign)BOOL isPlay;
 
 @property (nonatomic ,retain)NSTimer * timer;
@@ -29,18 +41,23 @@
 
 - (void)goon;
 
+- (void)changeValueWithProgress:(float)value;
+
 @end
 @protocol AududioDelegate <NSObject>
 
-- (void)playIsEnd;
+
+@optional
+
+- (void)audioManager:(AudioManager *)manager BeginToPlayToProgress:(float)progress currentTime:(int)currentTime durationTime:(int)durationTime;
+
+- (void)audioMangaer:(AudioManager *)manager PlayIsEnd:(AVPlayer *)player;
+
+- (void)audioMangaer:(AudioManager *)manager PlayIsPause:(AVPlayer *)player;
+
+- (void)audioMangaer:(AudioManager *)manager PlayIsGoOn:(AVPlayer *)player;
 
 @end
-@interface NSTimer (Blocks)
 
-+(id)scheduledTimerWithTimeInterval:(NSTimeInterval)inTimeInterval block:(void (^)())inBlock repeats:(BOOL)inRepeats;
-
-+(id)timerWithTimeInterval:(NSTimeInterval)inTimeInterval block:(void (^)())inBlock repeats:(BOOL)inRepeats;
-
-@end
 
 
